@@ -7,7 +7,7 @@ import java.lang.management.ManagementFactory;
 import java.io.*;
 
 public class home {
-	
+	//sets up osBean object to perform system pulls for cpu and memory
 	static com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 	
 	public static void main(String[] args) {
@@ -20,13 +20,13 @@ public class home {
 				System.out.println("Storage: " + storage() + " GB free of " + totalstore() + " GB");
 				System.out.println("CPU Usage: " + cpu() + "%" + "  Memory Usage: " + memory() + "%" + "  ");
 				System.out.println("CPU Free: " + cpufree() + "%" + "  Memory Free: " + memoryfree() + "%");
+				System.out.println("Network Speed?: " );
 				System.out.println("--------------------------------------------------");
 				//sets lastcall = to current time
 				lastcall = System.currentTimeMillis();
 			}
 		//while statement to keep the loop running
 		}while(System.currentTimeMillis() > 0);
-		
 		
 	}
 	
@@ -36,6 +36,10 @@ public class home {
 		double cpu = osBean.getCpuLoad() * 100;
 		//this is the java virtual machine cpu usage to account for running this program
 		double JVcpu = osBean.getProcessCpuLoad()*100;
+		//when java environment is not running it will just set this to 0 and add to cpu
+		if(JVcpu <= 0) {
+			JVcpu = 0;
+		}
 		//add both usages together
 		cpu = cpu + JVcpu;
 		//multiply by 100 and round it
@@ -58,6 +62,10 @@ public class home {
 		double cpu = osBean.getCpuLoad() * 100;
 		//this is the java virtual machine cpu usage to account for running this program
 		double JVcpu = osBean.getProcessCpuLoad()*100;
+		//when java environment is not running it will just set this to 0 and add to cpu
+		if(JVcpu <= 0) {
+			JVcpu = 0;
+		}
 		//add both usages together
 		cpu = cpu + JVcpu;
 		//multiply by 100 and round it
