@@ -38,8 +38,10 @@ public class ResourceMonitorGUI {
         home.add(new JScrollPane(Jtable2), BorderLayout.SOUTH);
         
         frame.add(home);
-        //this creates a timer set to 1 second and calls the update method every second
-        timer = new Timer(1000, new ActionListener() {
+        //this creates a timer set to 1 millisecond and calls the update method every second
+        //* edit, changed this to 1 millisecond, one second was waaaaay to long, seems to have solved the issue for now
+        // gui is a teeny bit glitchy looking but should be fine
+        timer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 update();
