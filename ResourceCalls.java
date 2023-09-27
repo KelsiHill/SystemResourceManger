@@ -1,11 +1,13 @@
 import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 public class ResourceCalls {
 	//sets up osBean object to perform system pulls for cpu and memory
 	static com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-	/*returns used cpu space *will be within a few % off from task manager because
-	* microsoft uses much more complicated ways of measuring. 
+	/*returns cpu load at the exact time it is called *will be a few % off from task manager because
+	* microsoft uses much more accurate ways of measuring that cannot be done
+	* in java. 
 	*/
 	public static double cpu() {
 		//set cpu = to the cpu load pulled from osBean * 100 to make it a percent
@@ -26,6 +28,9 @@ public class ResourceCalls {
 		if(cpu <= -100) {
 			return 0;
 		}
+		else if(cpu > 100) {
+			return 100;
+		}
 		else {
 		//returns cpu
 		return cpu;
@@ -34,29 +39,11 @@ public class ResourceCalls {
 	
 	//returns free cpu space
 	public static double cpufree() {
-		//set cpu = to the cpu load pulled from osBean * 100 to make it a percent
-		double cpu = osBean.getCpuLoad() * 100;
-		//this is the java virtual machine cpu usage to account for running this program
-		double JVcpu = osBean.getProcessCpuLoad()*100;
-		//when java environment is not running it will just set this to 0 and add to cpu
-		if(JVcpu <= 0) {
-			JVcpu = 0;
-		}
-		//add both usages together
-		cpu = cpu + JVcpu;
-		//multiply by 100 and round it
-		cpu = Math.round(cpu * 100);
-		//divide by 100 to get the accurate percentage to 2 decimal places
-		cpu = cpu/100;
-		//if there is no data, it will return 0
-		if(cpu <= -100) {
-			return 0;
-		}
-		else {
+		//Cpu call to get the cpu load
+		double cpu = cpu();
 		//returns free cpu processing
 		return 100 - cpu;
 		}
-	}
 	
 	//returns ram usage
 	public static double memory() {
@@ -114,5 +101,17 @@ public class ResourceCalls {
         //divides by 100 to get back to gigs
         totspace = totspace / 100;
         return totspace;
+	}
+	
+	public static int netconnection() throws IOException, InterruptedException {
+		Process test = java.lang.Runtime.getRuntime().exec("ping www.google.com");
+		int netconnect = test.waitFor();
+		if(netconnect == 0) {
+			return netconnect;
+		}
+		else {
+			netconnect = 1;
+			return netconnect;
+		}
 	}
 }
