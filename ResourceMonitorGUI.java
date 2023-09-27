@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class ResourceMonitorGUI {
     private JFrame frame;
@@ -12,7 +13,7 @@ public class ResourceMonitorGUI {
     private Timer timer;
     private DefaultTableModel table2;
     
-    public ResourceMonitorGUI() {
+    public ResourceMonitorGUI() throws IOException, InterruptedException {
     	//just basic jframe junk
         frame = new JFrame("System Resource Manager");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,7 +30,12 @@ public class ResourceMonitorGUI {
         
         table2 = new DefaultTableModel();
         table2.addColumn("Storage: " + ResourceCalls.storage() + " GB free out of " + ResourceCalls.totalstore() + " GB");
-        
+        if(ResourceCalls.netconnection() == 0) {
+        	table2.addColumn("Internet Connection Status: Connected");
+        }
+        else {
+        	table2.addColumn("Internet Connection Status: Disconnected");
+        }
         Jtable2 = new JTable(table2);
         Jtable2.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         
@@ -66,7 +72,7 @@ public class ResourceMonitorGUI {
         tableModel.addRow(new Object[] {"Free (%)", ResourceCalls.cpufree(), ResourceCalls.memoryfree()});
     }
     //boring main method that starts the gui
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
     	
     	ResourceMonitorGUI gui = new ResourceMonitorGUI();
         gui.start();
